@@ -85,45 +85,56 @@ window.addEventListener('DOMContentLoaded', event => {
 
     window.addEventListener("scroll", reveal);
 
-    // Revelação inicial ao carregar a página
     reveal();
 
-    // Exemplo de tratamento de envio de formulário (substitua pela sua lógica de backend)
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
         contactForm.addEventListener('submit', function (event) {
-            event.preventDefault(); // Impede o envio padrão do formulário
+            event.preventDefault();
 
-            const formData = new FormData(contactForm);
+            if (validateForm()) {
+                const formData = new FormData(contactForm);
 
-            // Exemplo usando a API Fetch (substitua pelo seu endpoint de backend real)
-            fetch('seu-endpoint-de-backend', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => {
-                    if (response.ok) {
-                        // Sucesso
-                        alert('Formulário enviado com sucesso!');
-                        contactForm.reset(); // Limpa o formulário
-                    } else {
-                        // Erro
-                        alert('Falha no envio do formulário.');
-                    }
+                fetch('seu-endpoint-de-backend', {
+                    method: 'POST',
+                    body: formData
                 })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Ocorreu um erro durante o envio do formulário.');
-                });
+                    .then(response => {
+                        if (response.ok) {
+                            // Sucesso
+                            alert('Formulário enviado com sucesso!');
+                            contactForm.reset(); // Limpa o formulário
+                        } else {
+                            // Erro
+                            alert('Falha no envio do formulário.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        alert('Ocorreu um erro durante o envio do formulário.');
+                    });
+            }
         });
     }
 
-    // Exemplo: Adiciona uma classe a um elemento específico após um atraso
     const delayedElement = document.getElementById('delayedElement');
     if (delayedElement) {
         setTimeout(() => {
             delayedElement.classList.add('delayed-animation');
-        }, 2000); // Atraso de 2 segundos
+        }, 2000);
+    }
+
+    function validateForm() {
+        const name = contactForm.querySelector('[name="name"]').value;
+        const email = contactForm.querySelector('[name="email"]').value;
+        const message = contactForm.querySelector('[name="message"]').value;
+
+        if (!name || !email || !message) {
+            alert('Por favor, preencha todos os campos obrigatórios.');
+            return false;
+        }
+
+        return true;
     }
 
 });
